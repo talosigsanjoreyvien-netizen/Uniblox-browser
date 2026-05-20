@@ -11,7 +11,7 @@ android {
 
   defaultConfig {
     applicationId = "fun.cybercode.uniblox.browser"
-    minSdk = 21
+    minSdk = 19
     targetSdk = 34
     versionCode = 1
     versionName = "1.0"
@@ -69,24 +69,25 @@ secrets {
 // Some unused dependencies are commented out below instead of being removed.
 // This makes it easy to add them back in the future if needed.
 dependencies {
-  implementation(platform("com.google.firebase:firebase-bom:34.12.0"))
-  implementation("androidx.room:room-runtime:2.7.0")
-  implementation("androidx.appcompat:appcompat:1.7.0")
-  implementation("com.google.android.material:material:1.12.0")
-  implementation("androidx.constraintlayout:constraintlayout:2.2.1")
-  implementation("com.squareup.retrofit2:converter-moshi:2.12.0")
+  implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
+  implementation("androidx.room:room-runtime:2.5.2")
+  implementation("androidx.appcompat:appcompat:1.6.1")
+  implementation("com.google.android.material:material:1.10.0")
+  implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+  implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
   implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
-  implementation("com.squareup.moshi:moshi-kotlin:1.15.2")
+  implementation("com.squareup.moshi:moshi-kotlin:1.14.0")
   implementation("com.squareup.okhttp3:okhttp:4.10.0")
-  implementation("com.squareup.retrofit2:retrofit:2.12.0")
+  implementation("com.squareup.retrofit2:retrofit:2.9.0")
+  implementation("androidx.multidex:multidex:2.0.1")
   
-  testImplementation("androidx.test:core:1.6.1")
-  testImplementation("androidx.test.ext:junit:1.3.0")
+  testImplementation("androidx.test:core:1.5.0")
+  testImplementation("androidx.test.ext:junit:1.1.5")
   testImplementation("junit:junit:4.13.2")
-  testImplementation("org.robolectric:robolectric:4.16.1")
-  testImplementation("io.github.takahirom.roborazzi:roborazzi:1.59.0")
-  testImplementation("io.github.takahirom.roborazzi:roborazzi-junit-rule:1.59.0")
+  testImplementation("org.robolectric:robolectric:4.10.3")
+  testImplementation("io.github.takahirom.roborazzi:roborazzi:1.6.0")
+  testImplementation("io.github.takahirom.roborazzi:roborazzi-junit-rule:1.6.0")
   
-  "ksp"("androidx.room:room-compiler:2.7.0")
-  "ksp"("com.squareup.moshi:moshi-kotlin-codegen:1.15.2")
+  "ksp"("androidx.room:room-compiler:2.5.2")
+  "ksp"("com.squareup.moshi:moshi-kotlin-codegen:1.14.0")
 }
