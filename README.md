@@ -1,41 +1,21 @@
-# Uniblox Browser
+<div align="center">
+<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
+</div>
 
-Uniblox browser is a product for UNIBLOX which is fast, smooth and it's all homemade.
+# Run and deploy your AI Studio app
 
-## Building with AIDE
+This contains everything you need to run your app locally.
 
-1. Open AIDE on your Android tablet
-2. Open/Clone this project
-3. Click **Build** to compile
-4. Click **Run** to test on device
+View your app in AI Studio: https://ai.studio/apps/593a568e-84c4-47a6-a6a8-b8e628760ac3
 
-## Features
+## Run Locally
 
-- Fast web browsing
-- WebView-based browser
-- Material Design UI
-- Uniblox App Store verified
+**Prerequisites:**  [Android Studio](https://developer.android.com/studio)
 
-## Project Structure
 
-```
-Uniblox-browser/
-├── app/
-│   ├── build.gradle
-│   ├── src/
-│   │   └── main/
-│   │       ├── java/com/uniblox/browser/
-│   │       ├── res/
-│   │       └── AndroidManifest.xml
-│   └── proguard-rules.pro
-├── build.gradle
-├── settings.gradle
-├── gradle.properties
-└── README.md
-```
-
-## Requirements
-
-- Android SDK 21+
-- Java 11+
-- AIDE or Android Studio
+1. Open Android Studio
+2. Select **Open** and choose the directory containing this project
+3. Allow Android Studio to fix any incompatibilities as it imports the project.
+4. Create a file named `.env` in the project directory and set `GEMINI_API_KEY` in that file to your Gemini API key (see `.env.example` for an example)
+5. Remove this line from the app's `build.gradle.kts` file: `signingConfig = signingConfigs.getByName("debugConfig")`
+6. Run the app on an emulator or physical device

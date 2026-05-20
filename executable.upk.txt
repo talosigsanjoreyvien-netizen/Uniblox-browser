@@ -1,1 +1,19 @@
-[!uniblox-app-verification-token={upk.string=[jj-hhhgeffcggggg&+8-++jjjjjjjughkguhiygirvhfyt==]}] { manifiest { + metadata.json} }
+
+[!uniblox-app-verification-token={upk.string=[jj-hhhgeffcggggg&+8-++jjjjjjjughkguhiygirvhfyt==]}]
+{
+  manifiest {
+    + metadata.json
+  }
+  robots.rules{
+    public class extends.entity_obj[code] type= "rules" {
+      rules{
+        application.name:uniblox browser;
+        application.pkg.name:+ pkg;
+        application.version:2.0;
+        robots.allow.rule: request index;
+        robots.disable.rule: view code;
+      }
+    }
+  }
+}
+export multi-executable function ()
