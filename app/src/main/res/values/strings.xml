@@ -1,14 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">UNIBLOX Browser</string>
-    <string name="address_bar_placeholder">Enter URL or search...</string>
-    <string name="go_button">Go</string>
-    <string name="back">Back</string>
-    <string name="forward">Forward</string>
-    <string name="refresh">Refresh</string>
-    <string name="home">Home</string>
-    <string name="error_loading_page">Failed to load page.</string>
-    <string name="tabs">Tabs</string>
-    <string name="bookmarks">Bookmarks</string>
-    <string name="new_tab">New Tab</string>
-    <string name="close_tab">Close Tab</string>
+    <string name="app_name">Uniblox Browser</string>
+    <string name="welcome">Welcome to Uniblox Browser</string>
 </resources>
