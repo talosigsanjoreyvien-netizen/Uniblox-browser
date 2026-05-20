@@ -50,12 +50,10 @@ Uniblox-browser/
 │   │   ├── java/            # Java source code
 │   │   ├── res/             # Resources (layouts, drawables)
 │   │   └── AndroidManifest.xml
-│   ├── build.gradle.kts     # App-level build config
+│   ├── build.gradle         # App-level build config
 │   └── proguard-rules.pro   # ProGuard obfuscation rules
-├── gradle/                  # Gradle wrapper
-├── build.gradle.kts         # Project-level build config
-├── settings.gradle.kts      # Gradle settings
-├── gradlew                  # Gradle wrapper (Unix/Mac)
+├── build.gradle             # Project-level build config
+├── settings.gradle          # Gradle settings
 ├── executable.upk.txt       # Uniblox verification token
 └── README.md
 ```
@@ -106,14 +104,14 @@ This token:
 
 To build a release APK:
 
-1. Configure signing key in `app/build.gradle.kts`
+1. Configure signing key in `app/build.gradle`
 2. Set environment variables:
    ```bash
    export KEYSTORE_PATH=/path/to/keystore
    export STORE_PASSWORD=your_password
    export KEY_PASSWORD=your_key_password
    ```
-3. Run: `./gradlew assembleRelease`
+3. Run: `gradle assembleRelease`
 
 ## Dependencies
 

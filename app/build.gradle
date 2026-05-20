@@ -1,0 +1,97 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'com.google.devtools.ksp'
+    id 'io.github.takahirom.roborazzi'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
+}
+
+android {
+    namespace 'fun.cybercode.uniblox.browser'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'fun.cybercode.uniblox.browser'
+        minSdk 21
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+
+        multiDexEnabled true
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        release {
+            def keystorePath = System.getenv("KEYSTORE_PATH") ?: "${rootDir}/my-upload-key.jks"
+            storeFile file(keystorePath)
+            storePassword System.getenv("STORE_PASSWORD")
+            keyAlias 'upload'
+            keyPassword System.getenv("KEY_PASSWORD")
+        }
+        debugConfig {
+            storeFile file("${rootDir}/debug.keystore")
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+        }
+    }
+
+    buildTypes {
+        release {
+            crunchPngs false
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+        debug {
+            signingConfig signingConfigs.debugConfig
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+    buildFeatures {
+        compose false
+        buildConfig true
+    }
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
+}
+
+secrets {
+    propertiesFileName = ".env"
+    defaultPropertiesFileName = ".env.example"
+}
+
+dependencies {
+    implementation platform("com.google.firebase:firebase-bom:33.1.2")
+    implementation "androidx.room:room-runtime:2.5.2"
+    implementation "androidx.appcompat:appcompat:1.6.1"
+    implementation "com.google.android.material:material:1.10.0"
+    implementation "androidx.constraintlayout:constraintlayout:2.1.4"
+    implementation "com.squareup.retrofit2:converter-moshi:2.9.0"
+    implementation "com.squareup.okhttp3:logging-interceptor:4.10.0"
+    implementation "com.squareup.moshi:moshi-kotlin:1.14.0"
+    implementation "com.squareup.okhttp3:okhttp:4.10.0"
+    implementation "com.squareup.retrofit2:retrofit:2.9.0"
+    implementation "androidx.multidex:multidex:2.0.1"
+    
+    testImplementation "androidx.test:core:1.5.0"
+    testImplementation "androidx.test.ext:junit:1.1.5"
+    testImplementation "junit:junit:4.13.2"
+    testImplementation "org.robolectric:robolectric:4.10.3"
+    testImplementation "io.github.takahirom.roborazzi:roborazzi:1.6.0"
+    testImplementation "io.github.takahirom.roborazzi:roborazzi-junit-rule:1.6.0"
+    
+    ksp "androidx.room:room-compiler:2.5.2"
+    ksp "com.squareup.moshi:moshi-kotlin-codegen:1.14.0"
+}
