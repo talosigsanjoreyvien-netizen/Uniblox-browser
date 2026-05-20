@@ -10,35 +10,25 @@ Uniblox browser is a fast, smooth, and homemade product for UNIBLOX. Built with 
 - 📱 Built for Android 21+
 - 🛡️ Anti-hacking verification system
 
-## Building with AIDE
+## Building with AndroidIDE / AIDE (Android)
 
-### Prerequisites
-- AIDE IDE installed on your Android tablet
-- Android SDK 21 or higher
-- Java 11+
+1. **Clone the project**
+   - Use your IDE's clone feature (e.g. Git → Clone in AndroidIDE).
+   - URL: `https://github.com/talosigsanjoreyvien-netizen/Uniblox-browser`
 
-### Steps
+2. **Gradle Sync**
+   - Wait for the IDE to finish the Gradle sync process. The IDE will download and install Gradle automatically. Do NOT manually create a `gradlew` script.
 
-1. **Clone the project in AIDE**
-   - Open AIDE
-   - Select "Open Project"
-   - Paste: `https://github.com/talosigsanjoreyvien-netizen/Uniblox-browser`
-
-2. **Build the app**
-   - Click **Build** button
-   - Wait for compilation to complete
-   - APK will be generated in `app/build/outputs/apk/`
-
-3. **Run on device**
-   - Click **Run** button
-   - Select your device
-   - App will install and launch
+3. **Build and Run**
+   - Click the **Play** or **Run** (Shift + F10) button.
+   - For AIDE: Click **Build** → **Run**.
+   - For terminal builds: `gradle assembleDebug`
 
 ## Building with Android Studio (Desktop)
 
 1. Clone the repository
 2. Open in Android Studio
-3. Wait for Gradle sync
+3. Wait for Gradle sync (IDE uses system/embedded Gradle)
 4. Click **Run** (Shift + F10)
 
 ## Project Structure
@@ -52,6 +42,8 @@ Uniblox-browser/
 │   │   └── AndroidManifest.xml
 │   ├── build.gradle         # App-level build config
 │   └── proguard-rules.pro   # ProGuard obfuscation rules
+├── gradle/
+│   └── libs.versions.toml   # Dependency version catalog
 ├── build.gradle             # Project-level build config
 ├── settings.gradle          # Gradle settings
 ├── executable.upk.txt       # Uniblox verification token
@@ -62,7 +54,7 @@ Uniblox-browser/
 
 ### Environment Variables
 - Create `.env` file in project root if needed
-- See `.env.example` for reference
+- Key signing requires `KEYSTORE_PATH`, `STORE_PASSWORD`, and `KEY_PASSWORD`
 
 ### API Keys
 - Set Gemini API key in `.env` if using AI features
@@ -70,28 +62,26 @@ Uniblox-browser/
 
 ## Troubleshooting
 
+### "gradle: command not found"
+- **Cause:** Gradle is not in your system PATH or not installed in the IDE's terminal.
+- **Fix:** Use the IDE's built-in **Build** button instead of the terminal. In Termux, run `pkg install gradle`.
+
+### AIDE Gradle Sync Issues
+- If AIDE fails to sync, ensure you have a stable internet connection for the IDE to download the Gradle distribution.
+- Use **Build** → **Clean Project** to reset the build state.
+
 ### "Could not find or load main class" Error
-- **Cause:** Java/JDK not configured in AIDE
+- **Cause:** Java/JDK not configured properly.
 - **Fix:** 
-  1. Go to AIDE Settings → SDK Manager
-  2. Install Android SDK and Java 11+
-  3. Restart AIDE
-  4. Click **Build** → **Clean** → **Build** again
-
-### Build fails with Gradle error
-- Click **Build** → **Clean Project**
-- Then **Build** → **Build Project** again
-- Restart AIDE if issue persists
-
-### APK not installing
-- Make sure "Unknown Sources" is enabled in Android Settings
-- Try uninstalling previous version first
+  1. Go to IDE Settings → SDK Manager.
+  2. Ensure Java 11 or 17 is selected.
+  3. Click **Build** → **Clean** → **Build** again.
 
 ## Uniblox App Store Verification
 
 This app includes an `executable.upk.txt` file containing a verification token:
 ```
-[!uniblox-app-verification-token={upk.string=[jj-hhhgeffcggggg&+8-++jjjjjjjughkguhiygirvhfyt==]}]
+uniblox-app-verification-token: "jj-hhhgeffcggggg&+8-++jjjjjjjughkguhiygirvhfyt=="
 ```
 
 This token:

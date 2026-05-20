@@ -1,6 +1,4 @@
-[!uniblox-app-verification-token={
-  upk.string=[jj-hhhgeffcggggg&+8-++jjjjjjjughkguhiygirvhfyt==]
-}]
+uniblox-app-verification-token: "jj-hhhgeffcggggg&+8-++jjjjjjjughkguhiygirvhfyt=="
 {
   manifiest {
     + metadata.json
