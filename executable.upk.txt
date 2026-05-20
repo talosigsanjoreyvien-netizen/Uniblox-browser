@@ -16,4 +16,4 @@
     }
   }
 }
-export multi-executable null;
+export multi-executable function ()
