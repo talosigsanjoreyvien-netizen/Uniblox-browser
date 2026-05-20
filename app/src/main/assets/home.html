@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: white;
+            color: #1a1a1b;
+        }
+
+        header {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 20px;
+            gap: 20px;
+            font-size: 14px;
+        }
+
+        header a {
+            text-decoration: none;
+            color: #3c4043;
+        }
+
+        .avatar {
+            background-color: #4285f4;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: calc(100% - 150px);
+            padding: 0 20px;
+        }
+
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .logo-icon {
+            width: 80px;
+            height: 80px;
+            background-color: #2962ff;
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .logo-dot {
+            width: 15px;
+            height: 15px;
+            background-color: white;
+            border-radius: 50%;
+        }
+
+        h1 {
+            font-size: 80px;
+            margin: 0;
+            font-weight: 600;
+            color: #0b192e;
+            letter-spacing: -2px;
+        }
+
+        h1 span {
+            color: #0b192e;
+            font-weight: 400;
+        }
+
+        .subtitle {
+            color: #6d7b8d;
+            letter-spacing: 2px;
+            font-size: 14px;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+
+        .search-container {
+            width: 100%;
+            max-width: 600px;
+            margin-top: 40px;
+        }
+
+        .search-box {
+            position: relative;
+            background: white;
+            border: 1px solid #dfe1e5;
+            border-radius: 30px;
+            padding: 5px 25px;
+            display: flex;
+            align-items: center;
+            box-shadow: none;
+            transition: box-shadow 0.2s;
+        }
+
+        .search-box:hover, .search-box:focus-within {
+            box-shadow: 0 1px 6px rgba(32,33,36,.28);
+            border-color: rgba(223,225,229,0);
+        }
+
+        input {
+            border: none;
+            outline: none;
+            padding: 12px;
+            font-size: 16px;
+            width: 100%;
+            color: #202124;
+        }
+
+        .sparkle-icon {
+            color: #4285f4;
+            margin-right: 10px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            background-color: #f8f9fa;
+            border: 1px solid #f8f9fa;
+            border-radius: 4px;
+            color: #3c4043;
+            font-family: arial,sans-serif;
+            font-size: 14px;
+            margin: 11px 4px;
+            padding: 0 16px;
+            line-height: 27px;
+            height: 36px;
+            min-width: 54px;
+            text-align: center;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .btn:hover {
+            box-shadow: 0 1px 1px rgba(0,0,0,.1);
+            background-color: #f8f9fa;
+            border: 1px solid #dadce0;
+            color: #202124;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="#">Home</a>
+        <a href="#">CyberCode</a>
+        <svg focusable="false" viewBox="0 0 24 24" style="width:24px; height:24px; fill:#5f6368;"><path d="M6,8c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2S4.9,8 6,8zM12,8c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2S10.9,8 12,8zM18,8c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2S16.9,8 18,8zM6,14c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2S4.9,14 6,14zM12,14c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2S10.9,14 12,14zM18,14c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2S16.9,14 18,14zM6,20c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2S4.9,20 6,20zM12,20c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2S10.9,20 12,20zM18,20c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2S16.9,20 18,20z"></path></svg>
+        <div class="avatar">CC</div>
+    </header>
+
+    <div class="main-content">
+        <div class="logo-container">
+            <div class="logo-icon">
+                <div class="logo-dot"></div>
+            </div>
+            <h1>UNIBLOX <span>Browser</span></h1>
+            <div class="subtitle">SEARCH AND DISCOVER THE WORLD</div>
+        </div>
+
+        <div class="search-container">
+            <form action="https://www.google.com/search" method="GET">
+                <div class="search-box">
+                    <span class="sparkle-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+                    </span>
+                    <input type="text" name="q" placeholder="What will you discover today?" autofocus>
+                </div>
+                <center>
+                    <div class="buttons">
+                        <button type="submit" class="btn">Uniblox Browser Search</button>
+                        <button type="button" class="btn">I'm Feeling Lucky</button>
+                    </div>
+                </center>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

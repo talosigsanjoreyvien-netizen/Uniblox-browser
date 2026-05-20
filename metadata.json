@@ -1,0 +1,6 @@
+{
+  "name": "UNIBLOX Browser",
+  "description": "UNIBLOX Browser is a search engine and web browser designed for discovery and performance.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
