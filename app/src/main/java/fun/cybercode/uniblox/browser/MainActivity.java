@@ -11,9 +11,12 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import fun.cybercode.uniblox.browser.util.AdBlocker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -37,6 +40,9 @@ import fun.cybercode.uniblox.browser.ui.TabViewModel;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import android.os.Build;
+import androidx.appcompat.app.AlertDialog;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -83,6 +89,40 @@ public class MainActivity extends AppCompatActivity {
         setupDrawers();
         observeTabs();
         startWatchdog();
+        checkEmulatorStatus();
+    }
+
+    private void checkEmulatorStatus() {
+        if (isEmulator()) {
+            View installBtn = findViewById(R.id.btn_install_app);
+            if (installBtn != null) {
+                installBtn.setVisibility(View.VISIBLE);
+                installBtn.setOnClickListener(v -> showInstallDialog());
+            }
+        }
+    }
+
+    private boolean isEmulator() {
+        return (Build.FINGERPRINT.startsWith("generic")
+                || Build.FINGERPRINT.startsWith("unknown")
+                || Build.MODEL.contains("google_sdk")
+                || Build.MODEL.contains("Emulator")
+                || Build.MODEL.contains("Android SDK built for x86")
+                || Build.MANUFACTURER.contains("Genymotion")
+                || (Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic"))
+                || "google_sdk".equals(Build.PRODUCT));
+    }
+
+    private void showInstallDialog() {
+        new AlertDialog.Builder(this)
+            .setTitle("Install UNIBLOX Browser")
+            .setMessage("To install this app on your physical device:\n\n" +
+                        "1. Open the 'Settings' menu (gear icon) in the top-right of the AI Studio Build interface.\n" +
+                        "2. Select 'Generate APK' or 'Download Project as ZIP'.\n" +
+                        "3. If you generated an APK, scan the QR code or follow the link to download it to your phone.\n" +
+                        "4. Enable 'Install from Unknown Sources' in your phone's settings if prompted.")
+            .setPositiveButton("Got it", null)
+            .show();
     }
 
     private void startWatchdog() {
@@ -185,7 +225,18 @@ public class MainActivity extends AppCompatActivity {
 
         webView.setWebViewClient(new WebViewClient() {
             @Override
+            public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+                if (AdBlocker.isAd(request.getUrl().toString())) {
+                    return AdBlocker.createEmptyResource();
+                }
+                return super.shouldInterceptRequest(view, request);
+            }
+
+            @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                if (AdBlocker.isAd(url)) {
+                    return true; // Block ad URLs from loading in the main frame
+                }
                 view.loadUrl(url);
                 return true;
             }
@@ -208,6 +259,32 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageFinished(WebView view, String url) {
+                // AdBlocker JS Injection to hide common ad elements
+                view.evaluateJavascript(
+                    "(function() {" +
+                    "   var css = 'iframe[src*=\"doubleclick.net\"], iframe[src*=\"googlesyndication.com\"], iframe[id*=\"google_ads\"], .ad-container, .adsbygoogle { display: none !important; }';" +
+                    "   var style = document.createElement('style');" +
+                    "   style.type = 'text/css';" +
+                    "   style.appendChild(document.createTextNode(css));" +
+                    "   document.head.appendChild(style);" +
+                    "   " +
+                    "   // Also remove gpt script tags if any were loaded before blocking" +
+                    "   var scripts = document.getElementsByTagName('script');" +
+                    "   for (var i = scripts.length - 1; i >= 0; i--) {" +
+                    "       if (scripts[i].src && (scripts[i].src.indexOf('gpt.js') !== -1 || scripts[i].src.indexOf('googletagservices.com') !== -1)) {" +
+                    "           scripts[i].parentNode.removeChild(scripts[i]);" +
+                    "       }" +
+                    "   }" +
+                    "   " +
+                    "   // Hide any remaining ad iframes" +
+                    "   var iframes = document.getElementsByTagName('iframe');" +
+                    "   for (var i = iframes.length - 1; i >= 0; i--) {" +
+                    "       if (iframes[i].src && (iframes[i].src.indexOf('ads') !== -1 || iframes[i].src.indexOf('doubleclick') !== -1)) {" +
+                    "           iframes[i].style.display = 'none';" +
+                    "       }" +
+                    "   }" +
+                    "})();", null);
+
                 if (view == currentWebView) {
                     progressBar.setVisibility(ProgressBar.GONE);
                     currentUrl = url;
@@ -364,7 +441,14 @@ public class MainActivity extends AppCompatActivity {
 
         // Tabs
         RecyclerView recyclerTabs = findViewById(R.id.recycler_tabs);
-        recyclerTabs.setLayoutManager(new LinearLayoutManager(this));
+        boolean isHorizontalTabs = findViewById(R.id.nav_view_tabs) == null;
+        
+        if (isHorizontalTabs) {
+            recyclerTabs.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        } else {
+            recyclerTabs.setLayoutManager(new LinearLayoutManager(this));
+        }
+        
         TabAdapter tabAdapter = new TabAdapter(new TabAdapter.OnTabInteractionListener() {
             @Override
             public void onTabClick(Tab tab) {

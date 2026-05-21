@@ -40,7 +40,7 @@ public abstract class AppDatabase extends RoomDatabase {
             super.onCreate(db);
             databaseWriteExecutor.execute(() -> {
                 BookmarkDao dao = INSTANCE.bookmarkDao();
-                dao.insertBookmark(new Bookmark("UNIBLOX Browser", "https://uniblox.io", System.currentTimeMillis()));
+                dao.insertBookmark(new Bookmark("UNIBLOX Browser", "file:///android_asset/home.html", System.currentTimeMillis()));
                 dao.insertBookmark(new Bookmark("Google", "https://google.com", System.currentTimeMillis()));
             });
         }
