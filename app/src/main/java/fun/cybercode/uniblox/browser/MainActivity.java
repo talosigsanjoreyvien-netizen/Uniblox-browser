@@ -20,9 +20,12 @@ import fun.cybercode.uniblox.browser.util.AdBlocker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProvider;
@@ -50,10 +53,31 @@ public class MainActivity extends AppCompatActivity {
     private EditText editUrl;
     private ProgressBar progressBar;
     private ImageButton btnBookmark;
+    private ImageView imgSslLock;
+    private android.widget.TextView txtTabCount;
+    private com.google.android.material.switchmaterial.SwitchMaterial switchDesktopMode;
     private DrawerLayout drawerLayout;
     
     private BookmarkViewModel bookmarkViewModel;
     private TabViewModel tabViewModel;
+    
+    private android.webkit.ValueCallback<android.net.Uri[]> filePathCallback;
+    private final androidx.activity.result.ActivityResultLauncher<Intent> fileChooserLauncher = registerForActivityResult(
+            new androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (filePathCallback != null) {
+                    android.net.Uri[] results = null;
+                    if (result.getResultCode() == android.app.Activity.RESULT_OK && result.getData() != null) {
+                        String dataString = result.getData().getDataString();
+                        if (dataString != null) {
+                            results = new android.net.Uri[]{android.net.Uri.parse(dataString)};
+                        }
+                    }
+                    filePathCallback.onReceiveValue(results);
+                    filePathCallback = null;
+                }
+            }
+    );
     
     private final Map<String, WebView> webViewMap = new HashMap<>();
     private WebView currentWebView;
@@ -79,6 +103,9 @@ public class MainActivity extends AppCompatActivity {
         editUrl = findViewById(R.id.edit_url);
         progressBar = findViewById(R.id.progress_bar);
         btnBookmark = findViewById(R.id.btn_bookmark);
+        imgSslLock = findViewById(R.id.img_ssl_lock);
+        txtTabCount = findViewById(R.id.txt_tab_count);
+        switchDesktopMode = findViewById(R.id.switch_desktop_mode);
         drawerLayout = findViewById(R.id.drawer_layout);
 
         bookmarkViewModel = new ViewModelProvider(this).get(BookmarkViewModel.class);
@@ -156,6 +183,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         tabViewModel.getTabs().observe(this, tabs -> {
+            if (txtTabCount != null) {
+                txtTabCount.setText(String.valueOf(tabs.size()));
+            }
             // Cleanup orphaned WebViews
             Map<String, WebView> toRemove = new HashMap<>();
             for (String id : webViewMap.keySet()) {
@@ -199,8 +229,27 @@ public class MainActivity extends AppCompatActivity {
         
         // Update UI
         currentUrl = currentWebView.getUrl() != null ? currentWebView.getUrl() : tab.getUrl();
-        editUrl.setText(currentUrl);
+        editUrl.setText(currentUrl.equals("file:///android_asset/home.html") ? "" : currentUrl);
         updateBookmarkIcon(currentUrl);
+        updateSslIcon(currentUrl);
+    }
+
+    private void updateSslIcon(String url) {
+        if (imgSslLock == null) return;
+        
+        runOnUiThread(() -> {
+            if (url != null && url.startsWith("https://")) {
+                imgSslLock.setVisibility(View.VISIBLE);
+                imgSslLock.setImageResource(R.drawable.ic_lock);
+                imgSslLock.setColorFilter(ContextCompat.getColor(this, R.color.chrome_blue));
+            } else if (url != null && url.startsWith("file:///")) {
+                imgSslLock.setVisibility(View.VISIBLE);
+                imgSslLock.setImageResource(R.drawable.ic_lock);
+                imgSslLock.setColorFilter(ContextCompat.getColor(this, android.R.color.darker_gray));
+            } else {
+                imgSslLock.setVisibility(View.GONE);
+            }
+        });
     }
 
     private WebView createWebView(Tab tab) {
@@ -222,6 +271,16 @@ public class MainActivity extends AppCompatActivity {
         
         // Ensure hardware acceleration is enabled for better WebGL performance
         webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+
+        webView.setDownloadListener((url, userAgent, contentDisposition, mimetype, contentLength) -> {
+            try {
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(android.net.Uri.parse(url));
+                startActivity(i);
+            } catch (Exception e) {
+                Toast.makeText(this, "Could not open download link", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         webView.setWebViewClient(new WebViewClient() {
             @Override
@@ -253,6 +312,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     currentUrl = url;
                     updateBookmarkIcon(url);
+                    updateSslIcon(url);
                 }
                 tabViewModel.updateActiveTabInfo(view.getTitle() != null ? view.getTitle() : "UNIBLOX Browser", url);
             }
@@ -330,6 +390,51 @@ public class MainActivity extends AppCompatActivity {
         });
 
         webView.setWebChromeClient(new WebChromeClient() {
+            private View customView;
+            private WebChromeClient.CustomViewCallback customViewCallback;
+
+            @Override
+            public void onShowCustomView(View view, WebChromeClient.CustomViewCallback callback) {
+                if (customView != null) {
+                    onHideCustomView();
+                    return;
+                }
+                customView = view;
+                customViewCallback = callback;
+                webViewContainer.addView(customView);
+                webViewContainer.setVisibility(View.VISIBLE);
+                // Hide other UI elements if necessary
+            }
+
+            @Override
+            public void onHideCustomView() {
+                webViewContainer.removeView(customView);
+                customView = null;
+                customViewCallback.onCustomViewHidden();
+            }
+
+            @Override
+            public void onPermissionRequest(final android.webkit.PermissionRequest request) {
+                request.grant(request.getResources());
+            }
+
+            @Override
+            public boolean onShowFileChooser(WebView webView, android.webkit.ValueCallback<android.net.Uri[]> filePathCallback, android.webkit.WebChromeClient.FileChooserParams fileChooserParams) {
+                if (MainActivity.this.filePathCallback != null) {
+                    MainActivity.this.filePathCallback.onReceiveValue(null);
+                }
+                MainActivity.this.filePathCallback = filePathCallback;
+
+                Intent intent = fileChooserParams.createIntent();
+                try {
+                    fileChooserLauncher.launch(intent);
+                } catch (Exception e) {
+                    MainActivity.this.filePathCallback = null;
+                    return false;
+                }
+                return true;
+            }
+
             @Override
             public boolean onCreateWindow(WebView view, boolean isDialog, boolean isUserGesture, android.os.Message resultMsg) {
                 tabViewModel.addNewTab("New Tab", "about:blank");
@@ -382,11 +487,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupButtons() {
-        findViewById(R.id.btn_menu).setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
+        ImageButton btnMenu = findViewById(R.id.btn_menu);
+        if (btnMenu != null) {
+            btnMenu.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
+        }
         
         View btnTabs = findViewById(R.id.btn_tabs);
         if (btnTabs != null) {
-            btnTabs.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.END));
+            btnTabs.setOnClickListener(v -> {
+                if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
+                    drawerLayout.closeDrawer(GravityCompat.END);
+                } else {
+                    drawerLayout.openDrawer(GravityCompat.END);
+                }
+            });
         }
         
         findViewById(R.id.btn_home).setOnClickListener(v -> {
@@ -405,12 +519,16 @@ public class MainActivity extends AppCompatActivity {
             if (currentWebView != null) currentWebView.reload();
         });
         
-        findViewById(R.id.btn_share).setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.setType("text/plain");
-            intent.putExtra(Intent.EXTRA_TEXT, currentUrl);
-            startActivity(Intent.createChooser(intent, "Share via"));
-        });
+        // Share functionality can be moved to a menu later
+
+        if (switchDesktopMode != null) {
+            switchDesktopMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (currentWebView != null) {
+                    setDesktopMode(currentWebView, isChecked);
+                    currentWebView.reload();
+                }
+            });
+        }
 
         btnBookmark.setOnClickListener(v -> {
             bookmarkViewModel.toggleBookmark(currentTitle, currentUrl);
@@ -449,6 +567,8 @@ public class MainActivity extends AppCompatActivity {
             recyclerTabs.setLayoutManager(new LinearLayoutManager(this));
         }
         
+        recyclerTabs.setHasFixedSize(true);
+        
         TabAdapter tabAdapter = new TabAdapter(new TabAdapter.OnTabInteractionListener() {
             @Override
             public void onTabClick(Tab tab) {
@@ -466,6 +586,16 @@ public class MainActivity extends AppCompatActivity {
         recyclerTabs.setAdapter(tabAdapter);
 
         tabViewModel.getTabs().observe(this, tabAdapter::submitList);
+    }
+
+    private void setDesktopMode(WebView webView, boolean enabled) {
+        String newUserAgent = enabled ? "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" : null;
+        webView.getSettings().setUserAgentString(newUserAgent);
+        webView.getSettings().setUseWideViewPort(enabled);
+        webView.getSettings().setLoadWithOverviewMode(enabled);
+        webView.getSettings().setSupportZoom(true);
+        webView.getSettings().setBuiltInZoomControls(true);
+        webView.getSettings().setDisplayZoomControls(false);
     }
 
     private void updateBookmarkIcon(String url) {
