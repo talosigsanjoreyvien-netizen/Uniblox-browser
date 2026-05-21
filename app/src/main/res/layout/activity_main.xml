@@ -14,7 +14,8 @@
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/uniblox_gradient_bg">
+            android:background="@android:color/white"
+            app:elevation="0dp">
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -24,82 +25,81 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <ImageButton
-                        android:id="@+id/btn_menu"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_centerVertical="true"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:contentDescription="Menu"
-                        android:src="@drawable/ic_menu_white" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginStart="8dp"
-                        android:layout_toEndOf="@id/btn_menu"
-                        android:text="UNIBLOX Browser"
-                        android:textColor="@android:color/white"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
+                    android:layout_height="match_parent"
+                    android:paddingHorizontal="4dp">
 
                     <ImageButton
                         android:id="@+id/btn_home"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
-                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentStart="true"
                         android:layout_centerVertical="true"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="@string/home"
-                        android:src="@drawable/ic_home_white" />
+                        android:src="@drawable/ic_home_white"
+                        app:tint="@color/chrome_dark_grey" />
+
+                    <LinearLayout
+                        android:id="@+id/address_bar_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="38dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginHorizontal="8dp"
+                        android:layout_toEndOf="@id/btn_home"
+                        android:layout_toStartOf="@id/btn_tabs"
+                        android:background="@drawable/address_bar_bg"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="4dp">
+
+                        <EditText
+                            android:id="@+id/edit_url"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@android:color/transparent"
+                            android:hint="@string/address_bar_placeholder"
+                            android:imeOptions="actionGo"
+                            android:inputType="textUri"
+                            android:paddingHorizontal="12dp"
+                            android:singleLine="true"
+                            android:textColor="@color/chrome_dark_grey"
+                            android:textColorHint="@android:color/darker_gray"
+                            android:textSize="14sp" />
+
+                        <ImageButton
+                            android:id="@+id/btn_bookmark"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="Bookmark"
+                            android:src="@drawable/ic_star_outline_grey" />
+                    </LinearLayout>
+
+                    <ImageButton
+                        android:id="@+id/btn_tabs"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_centerVertical="true"
+                        android:layout_toStartOf="@id/btn_menu"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="Tabs"
+                        android:src="@drawable/ic_tabs"
+                        app:tint="@color/chrome_dark_grey" />
+
+                    <ImageButton
+                        android:id="@+id/btn_menu"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="Menu"
+                        android:src="@drawable/ic_menu_white"
+                        app:tint="@color/chrome_dark_grey" />
+
                 </RelativeLayout>
             </androidx.appcompat.widget.Toolbar>
-
-            <LinearLayout
-                android:id="@+id/address_bar_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="12dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/address_bar_bg"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingHorizontal="8dp">
-
-                <EditText
-                    android:id="@+id/edit_url"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    android:hint="@string/address_bar_placeholder"
-                    android:textColor="@android:color/black"
-                    android:textColorHint="@android:color/darker_gray"
-                    android:imeOptions="actionGo"
-                    android:inputType="textUri"
-                    android:minHeight="48dp"
-                    android:paddingHorizontal="8dp"
-                    android:singleLine="true" />
-
-                <ImageButton
-                    android:id="@+id/btn_bookmark"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Bookmark"
-                    android:src="@drawable/ic_star_outline_grey" />
-
-                <ImageButton
-                    android:id="@+id/btn_go"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Go"
-                    android:src="@drawable/ic_arrow_forward_blue" />
-            </LinearLayout>
 
             <ProgressBar
                 android:id="@+id/progress_bar"
@@ -123,58 +123,56 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            app:contentInsetStart="0dp">
+            android:backgroundTint="@android:color/white"
+            app:contentInsetStart="0dp"
+            app:elevation="8dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingVertical="4dp">
 
                 <ImageButton
                     android:id="@+id/btn_back"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="48dp"
                     android:layout_weight="1"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="Back"
-                    android:src="@drawable/ic_arrow_back" />
+                    android:src="@drawable/ic_arrow_back"
+                    app:tint="@color/chrome_dark_grey" />
 
                 <ImageButton
                     android:id="@+id/btn_forward"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="48dp"
                     android:layout_weight="1"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="Forward"
-                    android:src="@drawable/ic_arrow_forward" />
-
-                <ImageButton
-                    android:id="@+id/btn_tabs"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Tabs"
-                    android:src="@drawable/ic_tabs" />
+                    android:src="@drawable/ic_arrow_forward"
+                    app:tint="@color/chrome_dark_grey" />
 
                 <ImageButton
                     android:id="@+id/btn_refresh"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="48dp"
                     android:layout_weight="1"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="Refresh"
-                    android:src="@drawable/ic_refresh" />
+                    android:src="@drawable/ic_refresh"
+                    app:tint="@color/chrome_dark_grey" />
 
                 <ImageButton
                     android:id="@+id/btn_share"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="48dp"
                     android:layout_weight="1"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="Share"
-                    android:src="@drawable/ic_share" />
+                    android:src="@drawable/ic_share"
+                    app:tint="@color/chrome_dark_grey" />
             </LinearLayout>
         </com.google.android.material.bottomappbar.BottomAppBar>
 
@@ -182,59 +180,66 @@
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view_bookmarks"
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
         android:layout_height="match_parent"
-        android:layout_gravity="start">
+        android:layout_gravity="start"
+        android:background="@android:color/white">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/bookmarks"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <View
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginVertical="8dp"
-                android:background="@android:color/darker_gray" />
+                android:layout_height="64dp"
+                android:paddingHorizontal="16dp"
+                android:background="@color/chrome_grey">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="@string/bookmarks"
+                    android:textColor="@color/chrome_dark_grey"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_bookmarks"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+                android:layout_height="match_parent"
+                android:padding="8dp"
+                android:clipToPadding="false" />
         </LinearLayout>
     </com.google.android.material.navigation.NavigationView>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view_tabs"
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
         android:layout_height="match_parent"
-        android:layout_gravity="end">
+        android:layout_gravity="end"
+        android:background="@android:color/white">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="64dp"
+                android:paddingHorizontal="16dp"
+                android:background="@color/chrome_grey">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="@string/tabs"
-                    android:textSize="20sp"
+                    android:textColor="@color/chrome_dark_grey"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <ImageButton
@@ -242,22 +247,19 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:src="@drawable/ic_add"
+                    app:tint="@color/chrome_blue"
                     android:contentDescription="@string/new_tab" />
             </RelativeLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginVertical="8dp"
-                android:background="@android:color/darker_gray" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_tabs"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+                android:layout_height="match_parent"
+                android:padding="8dp"
+                android:clipToPadding="false" />
         </LinearLayout>
     </com.google.android.material.navigation.NavigationView>
 

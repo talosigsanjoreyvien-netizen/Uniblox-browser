@@ -61,6 +61,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        if (!CertificateValidator.validateCertificate(this)) {
+            finish();
+            return;
+        }
+
         setContentView(R.layout.activity_main);
 
         webViewContainer = findViewById(R.id.webview_container);
@@ -171,11 +177,19 @@ public class MainActivity extends AppCompatActivity {
         settings.setDatabaseEnabled(true);
         settings.setAllowFileAccess(true);
         settings.setAllowContentAccess(true);
+        settings.setSupportMultipleWindows(true);
+        settings.setJavaScriptCanOpenWindowsAutomatically(true);
         
         // Ensure hardware acceleration is enabled for better WebGL performance
         webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
 
         webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+                return true;
+            }
+
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 if (view == currentWebView) {
@@ -240,6 +254,15 @@ public class MainActivity extends AppCompatActivity {
 
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
+            public boolean onCreateWindow(WebView view, boolean isDialog, boolean isUserGesture, android.os.Message resultMsg) {
+                tabViewModel.addNewTab("New Tab", "about:blank");
+                
+                // We'll let the ViewModel observer handle the actual WebView creation and attachment.
+                // For now, we return true to indicate we've handled the window creation.
+                return true;
+            }
+
+            @Override
             public void onProgressChanged(WebView view, int newProgress) {
                 if (view == currentWebView) {
                     progressBar.setProgress(newProgress);
@@ -263,8 +286,6 @@ public class MainActivity extends AppCompatActivity {
             }
             return false;
         });
-
-        findViewById(R.id.btn_go).setOnClickListener(v -> loadFormattedUrl(editUrl.getText().toString()));
     }
 
     private void loadFormattedUrl(String input) {

@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.card.MaterialCardView;
+import androidx.core.content.ContextCompat;
 import fun.cybercode.uniblox.browser.R;
 import fun.cybercode.uniblox.browser.data.Tab;
 
@@ -58,21 +60,25 @@ public class TabAdapter extends ListAdapter<Tab, TabAdapter.TabViewHolder> {
     static class TabViewHolder extends RecyclerView.ViewHolder {
         private final TextView titleText;
         private final ImageButton closeBtn;
+        private final MaterialCardView container;
 
         TabViewHolder(@NonNull View itemView) {
             super(itemView);
             titleText = itemView.findViewById(R.id.tab_title);
             closeBtn = itemView.findViewById(R.id.btn_close_tab);
+            container = itemView.findViewById(R.id.tab_container);
         }
 
         void bind(Tab tab, OnTabInteractionListener listener) {
             titleText.setText(tab.getTitle());
             if (tab.isActive()) {
                 titleText.setTypeface(null, Typeface.BOLD);
-                itemView.setBackgroundResource(android.R.color.darker_gray);
+                container.setStrokeColor(ContextCompat.getColor(itemView.getContext(), R.color.chrome_blue));
+                container.setCardBackgroundColor(ContextCompat.getColor(itemView.getContext(), R.color.tab_selected));
             } else {
                 titleText.setTypeface(null, Typeface.NORMAL);
-                itemView.setBackgroundResource(android.R.color.transparent);
+                container.setStrokeColor(ContextCompat.getColor(itemView.getContext(), R.color.chrome_grey));
+                container.setCardBackgroundColor(ContextCompat.getColor(itemView.getContext(), android.R.color.white));
             }
 
             itemView.setOnClickListener(v -> listener.onTabClick(tab));
